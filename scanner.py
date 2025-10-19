@@ -7,8 +7,8 @@ class Scanner(Lexer):
     literals = {'+', '-', '*', '/', '=',
                 '(', ')', '[', ']', '{', '}',
                 ':', ',', ';', '\'', '<', '>'}
-    tokens = {MATPLUS, MATMINUS, MATTIMES, MATDIV,
-              INCREMENT, DECREMENT, TIMESASSIGN, DIVASSIGN,
+    tokens = {MATADD, MATSUB, MATMUL, MATDIV,
+              ADDASSIGN, SUBASSIGN, MULASSIGN, DIVASSIGN,
               LESSEQUALS, GREATEREQUALS, NOTEQUALS, EQUALS,
               INT, FLOAT, STRING, ID, IF, ELSE, FOR, WHILE,
               BREAK, CONTINUE, RETURN, EYE, ZEROS, ONES, PRINT}
@@ -38,9 +38,9 @@ class Scanner(Lexer):
     FLOAT = r'\d+\.\d*'
     INT = r'\d+'
         
-    INCREMENT = r'\+='
-    DECREMENT = r'-='
-    TIMESASSIGN = r'\*='
+    ADDASSIGN = r'\+='
+    SUBASSIGN = r'-='
+    MULASSIGN = r'\*='
     DIVASSIGN = r'/='
 
     LESSEQUALS = r'<='
@@ -48,9 +48,9 @@ class Scanner(Lexer):
     NOTEQUALS = r'\!='
     EQUALS = r'=='
 
-    MATPLUS = r'\.\+'
-    MATMINUS = r'\.-'
-    MATTIMES = r'\.\*'
+    MATADD = r'\.\+'
+    MATSUB = r'\.-'
+    MATMUL = r'\.\*'
     MATDIV = r'\./'
 
     # Line number tracking
