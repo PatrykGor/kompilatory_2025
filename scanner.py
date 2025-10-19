@@ -35,8 +35,16 @@ class Scanner(Lexer):
     ID['print'] = PRINT
 
     STRING = r'".*"'
-    FLOAT = r'\d+\.\d*'
-    INT = r'\d+'
+
+    @_(r'\d+\.\d*|\.\d+')
+    def FLOAT(self, t):
+        t.value = float(t.value)
+        return t
+
+    @_(r'\d+')
+    def INT(self, t):
+        t.value = int(t.value)
+        return t
         
     ADDASSIGN = r'\+='
     SUBASSIGN = r'-='
