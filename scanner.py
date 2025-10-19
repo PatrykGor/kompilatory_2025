@@ -9,8 +9,9 @@ class Scanner(Lexer):
                 ':', ',', ';', '\'', '<', '>'}
     tokens = {MATPLUS, MATMINUS, MATTIMES, MATDIV,
               INCREMENT, DECREMENT, TIMESASSIGN, DIVASSIGN,
-              LESSEQUALS, GREATEREQUALS, NOTEEQUALS, EQUALS,
-              INT, FLOAT, STRING, ID}
+              LESSEQUALS, GREATEREQUALS, NOTEQUALS, EQUALS,
+              INT, FLOAT, STRING, ID, IF, ELSE, FOR, WHILE,
+              BREAK, CONTINUE, RETURN, EYE, ZEROS, ONES, PRINT}
     # String containing ignored characters (between tokens)
     ignore = ' \t'
 
