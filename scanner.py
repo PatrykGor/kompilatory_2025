@@ -4,7 +4,7 @@ from sly import Lexer
 
 class Scanner(Lexer):
 
-    literals = {'+', '-', '*', '/', '='
+    literals = {'+', '-', '*', '/', '=',
                 '(', ')', '[', ']', '{', '}',
                 ':', ',', ';', '\'', '<', '>'}
     tokens = {MATPLUS, MATMINUS, MATTIMES, MATDIV,
