@@ -4,13 +4,14 @@ from sly import Lexer
 
 class Scanner(Lexer):
 
-    literals = {'+', '-', '*', '/', '='
+    literals = {'+', '-', '*', '/', '=',
                 '(', ')', '[', ']', '{', '}',
                 ':', ',', ';', '\'', '<', '>'}
-    tokens = {MATPLUS, MATMINUS, MATTIMES, MATDIV,
-              INCREMENT, DECREMENT, TIMESASSIGN, DIVASSIGN,
-              LESSEQUALS, GREATEREQUALS, NOTEEQUALS, EQUALS,
-              INT, FLOAT, STRING, ID}
+    tokens = {MATADD, MATSUB, MATMUL, MATDIV,
+              ADDASSIGN, SUBASSIGN, MULASSIGN, DIVASSIGN,
+              LESSEQUALS, GREATEREQUALS, NOTEQUALS, EQUALS,
+              INT, FLOAT, STRING, ID, IF, ELSE, FOR, WHILE,
+              BREAK, CONTINUE, RETURN, EYE, ZEROS, ONES, PRINT}
     # String containing ignored characters (between tokens)
     ignore = ' \t'
 
@@ -34,12 +35,20 @@ class Scanner(Lexer):
     ID['print'] = PRINT
 
     STRING = r'".*"'
-    FLOAT = r'\d+\.\d*'
-    INT = r'\d+'
+
+    @_(r'\d+\.\d*|\.\d+')
+    def FLOAT(self, t):
+        t.value = float(t.value)
+        return t
+
+    @_(r'\d+')
+    def INT(self, t):
+        t.value = int(t.value)
+        return t
         
-    INCREMENT = r'\+='
-    DECREMENT = r'-='
-    TIMESASSIGN = r'\*='
+    ADDASSIGN = r'\+='
+    SUBASSIGN = r'-='
+    MULASSIGN = r'\*='
     DIVASSIGN = r'/='
 
     LESSEQUALS = r'<='
@@ -47,9 +56,9 @@ class Scanner(Lexer):
     NOTEQUALS = r'\!='
     EQUALS = r'=='
 
-    MATPLUS = r'\.\+'
-    MATMINUS = r'\.-'
-    MATTIMES = r'\.\*'
+    MATADD = r'\.\+'
+    MATSUB = r'\.-'
+    MATMUL = r'\.\*'
     MATDIV = r'\./'
 
     # Line number tracking
