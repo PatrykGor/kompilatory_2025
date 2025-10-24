@@ -36,7 +36,7 @@ class Scanner(Lexer):
 
     STRING = r'".*?"'
 
-    @_(r'(:?\d+\.\d*|\.\d+)(:?[eE]\d+)?|\d+[eE]\d+')
+    @_(r'(?:\d+\.\d*|\.\d+)(?:[eE]\d+)?|\d+[eE]\d+')
     def FLOAT(self, t):
         t.value = float(t.value)
         return t
