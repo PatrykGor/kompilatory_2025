@@ -34,9 +34,9 @@ class Scanner(Lexer):
     ID['ones'] = ONES
     ID['print'] = PRINT
 
-    STRING = r'".*"'
+    STRING = r'".*?"'
 
-    @_(r'\d+\.\d*|\.\d+')
+    @_(r'(:?\d+\.\d*|\.\d+)(:?[eE]\d+)?|\d+[eE]\d+')
     def FLOAT(self, t):
         t.value = float(t.value)
         return t
