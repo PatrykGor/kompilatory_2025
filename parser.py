@@ -18,6 +18,7 @@ class Mparser(Parser):
         ('nonassoc', 'IF'),
         ('nonassoc', 'ELSE'),
         ('left', "'"),
+        ('left', ':'),
     )
 
 
@@ -43,15 +44,15 @@ class Mparser(Parser):
 
     @_('expression ";"')
     def instruction(self, p):
-        return ('expr_stmt', p.expression)
+        pass
 
     @_('assignment ";"')
     def instruction(self, p):
-        return p.assignment
+        pass
 
     @_('if_statement')
     def instruction(self, p):
-        return p.if_statement
+        pass
 
     @_('while_loop')
     def instruction(self, p):
@@ -111,7 +112,7 @@ class Mparser(Parser):
 
     @_('IF "(" expression ")" instruction ELSE instruction')
     def if_statement(self, p):
-        return ('if', p.expression, p.instruction, p.instruction1)
+        return ('if', p.expression, p.instruction0, p.instruction1)
 
     @_('WHILE "(" expression ")" instruction')
     def while_loop(self, p):
