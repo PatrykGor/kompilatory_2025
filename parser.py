@@ -17,6 +17,8 @@ class Mparser(Parser):
         ('right', 'UMINUS'),
         ('nonassoc', 'IFX'),
         ('nonassoc', 'ELSE'),
+        ('left', 'JUSTID'),
+        ('left', '['),
         ('left', "'"),
         ('left', ':'),
     )
@@ -82,29 +84,25 @@ class Mparser(Parser):
     def instruction(self, p):
         return ('block', p.instructions_opt)
 
-    @_('ID "=" expression')
+    @_('address "=" expression')
     def assignment(self, p):
-        return ('assign', p.ID, p.expression)
+        return ('assign', p.address, p.expression)
 
-    @_('ID ADDASSIGN expression')
+    @_('address ADDASSIGN expression')
     def assignment(self, p):
-        return ('add_assign', p.ID, p.expression)
+        return ('add_assign', p.address, p.expression)
 
-    @_('ID SUBASSIGN expression')
+    @_('address SUBASSIGN expression')
     def assignment(self, p):
-        return ('sub_assign', p.ID, p.expression)
+        return ('sub_assign', p.address, p.expression)
 
-    @_('ID MULASSIGN expression')
+    @_('address MULASSIGN expression')
     def assignment(self, p):
-        return ('mul_assign', p.ID, p.expression)
+        return ('mul_assign', p.address, p.expression)
 
-    @_('ID DIVASSIGN expression')
+    @_('address DIVASSIGN expression')
     def assignment(self, p):
-        return ('div_assign', p.ID, p.expression)
-
-    @_('ID "[" expression_list "]" "=" expression')
-    def assignment(self, p):
-        return ('assign_indexed', p.ID, p.expression_list, p.expression)
+        return ('div_assign', p.address, p.expression)
 
     @_('IF "(" expression ")" instruction %prec IFX')
     def if_statement(self, p):
@@ -214,10 +212,6 @@ class Mparser(Parser):
     def expression(self, p):
         return ('transpose', p.expression)
 
-    @_('ID "[" expression_list "]"')
-    def expression(self, p):
-        return ('indexed', p.ID, p.expression_list)
-
     @_('"(" expression ")"')
     def expression(self, p):
         return p.expression
@@ -234,9 +228,17 @@ class Mparser(Parser):
     def expression(self, p):
         return ('string', p.STRING)
 
-    @_('ID')
-    def expression(self, p):
+    @_('ID %prec JUSTID')
+    def address(self, p):
         return ('id', p.ID)
+
+    @_('ID "[" expression_list "]"')
+    def address(self, p):
+        return ('indexed', p.ID, p.expression_list)
+
+    @_('address')
+    def expression(self, p):
+        return ('address', p.address)
 
     @_('EYE "(" expression ")"')
     def expression(self, p):
