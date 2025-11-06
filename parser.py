@@ -15,7 +15,7 @@ class Mparser(Parser):
         ('left', '+', '-', MATADD, MATSUB),
         ('left', '*', '/', MATMUL, MATDIV),
         ('right', 'UMINUS'),
-        ('nonassoc', 'IF'),
+        ('nonassoc', 'IFX'),
         ('nonassoc', 'ELSE'),
         ('left', "'"),
         ('left', ':'),
@@ -106,7 +106,7 @@ class Mparser(Parser):
     def assignment(self, p):
         return ('assign_indexed', p.ID, p.expression_list, p.expression)
 
-    @_('IF "(" expression ")" instruction')
+    @_('IF "(" expression ")" instruction %prec IFX')
     def if_statement(self, p):
         return ('if', p.expression, p.instruction, None)
 
