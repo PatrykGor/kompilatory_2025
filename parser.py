@@ -214,10 +214,6 @@ class Mparser(Parser):
     def expression(self, p):
         return ('transpose', p.expression)
 
-    @_('ID "(" expression_list ")"')
-    def expression(self, p):
-        return ('call', p.ID, p.expression_list)
-
     @_('ID "[" expression_list "]"')
     def expression(self, p):
         return ('indexed', p.ID, p.expression_list)
@@ -242,17 +238,17 @@ class Mparser(Parser):
     def expression(self, p):
         return ('id', p.ID)
 
-    @_('EYE "(" INT ")"')
+    @_('EYE "(" expression ")"')
     def expression(self, p):
-        return ('eye', p.INT)
+        return ('eye', p.expression)
 
-    @_('ZEROS "(" INT ")"')
+    @_('ZEROS "(" expression ")"')
     def expression(self, p):
-        return ('zeros', p.INT)
+        return ('zeros', p.expression)
 
-    @_('ONES "(" INT ")"')
+    @_('ONES "(" expression ")"')
     def expression(self, p):
-        return ('ones', p.INT)
+        return ('ones', p.expression)
 
     def error(self, token):
         if token:
