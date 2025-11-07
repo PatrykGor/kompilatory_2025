@@ -17,8 +17,6 @@ class Mparser(Parser):
         ('right', 'UMINUS'),
         ('nonassoc', 'IFX'),
         ('nonassoc', 'ELSE'),
-        ('left', 'JUSTID'),
-        ('left', '['),
         ('left', "'"),
         ('left', ':'),
     )
@@ -84,25 +82,25 @@ class Mparser(Parser):
     def instruction(self, p):
         return ('block', p.instructions_opt)
 
-    @_('address "=" expression')
+    @_('expression "=" expression')
     def assignment(self, p):
-        return ('assign', p.address, p.expression)
+        return ('assign', p.expression0, p.expression1)
 
-    @_('address ADDASSIGN expression')
+    @_('expression ADDASSIGN expression')
     def assignment(self, p):
-        return ('add_assign', p.address, p.expression)
+        return ('add_assign', p.expression0, p.expression1)
 
-    @_('address SUBASSIGN expression')
+    @_('expression SUBASSIGN expression')
     def assignment(self, p):
-        return ('sub_assign', p.address, p.expression)
+        return ('sub_assign', p.expression0, p.expression1)
 
-    @_('address MULASSIGN expression')
+    @_('expression MULASSIGN expression')
     def assignment(self, p):
-        return ('mul_assign', p.address, p.expression)
+        return ('mul_assign', p.expression0, p.expression1)
 
-    @_('address DIVASSIGN expression')
+    @_('expression DIVASSIGN expression')
     def assignment(self, p):
-        return ('div_assign', p.address, p.expression)
+        return ('div_assign', p.expression0, p.expression1)
 
     @_('IF "(" expression ")" instruction %prec IFX')
     def if_statement(self, p):
@@ -120,6 +118,14 @@ class Mparser(Parser):
     def for_loop(self, p):
         return ('for', p.ID, p.range, p.instruction)
 
+    @_('ID')
+    def expression(self, p):
+        pass
+
+    @_('ID "[" expression_list "]"')
+    def expression(self, p):
+        pass
+
     @_('expression ":" expression')
     def range(self, p):
         return ('range', p.expression0, p.expression1)
@@ -132,10 +138,10 @@ class Mparser(Parser):
     def expression_list(self, p):
         return p.expression_list + [p.expression]
 
-    @_('"[" matrix_rows "]"')
+    @_('expression "=" "[" matrix_rows "]"')
     def expression(self, p):
         return ('matrix', p.matrix_rows)
-
+    
     @_('matrix_row')
     def matrix_rows(self, p):
         return [p.matrix_row]
@@ -227,18 +233,6 @@ class Mparser(Parser):
     @_('STRING')
     def expression(self, p):
         return ('string', p.STRING)
-
-    @_('ID %prec JUSTID')
-    def address(self, p):
-        return ('id', p.ID)
-
-    @_('ID "[" expression_list "]"')
-    def address(self, p):
-        return ('indexed', p.ID, p.expression_list)
-
-    @_('address')
-    def expression(self, p):
-        return ('address', p.address)
 
     @_('EYE "(" expression ")"')
     def expression(self, p):
