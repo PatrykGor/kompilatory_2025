@@ -23,7 +23,7 @@ class Mparser(Parser):
 
     @_('instructions_opt')
     def program(self, p):
-        return AST.Block(p.instructions_opt)
+        return AST.Block(p.instructions_opt, p.lineno)
 
     @_('instructions')
     def instructions_opt(self, p):
@@ -63,59 +63,59 @@ class Mparser(Parser):
 
     @_('BREAK ";"')
     def instruction(self, p):
-        return AST.Break()
+        return AST.Break(p.lineno)
 
     @_('CONTINUE ";"')
     def instruction(self, p):
-        return AST.Continue()
+        return AST.Continue(p.lineno)
 
     @_('RETURN expression ";"')
     def instruction(self, p):
-        return AST.Return(p.expression)
+        return AST.Return(p.expression, p.lineno)
 
     @_('PRINT expression_list ";"')
     def instruction(self, p):
-        return AST.Print(p.expression_list)
+        return AST.Print(p.expression_list, p.lineno)
 
     @_('"{" instructions_opt "}"')
     def instruction(self, p):
-        return AST.Block(p.instructions_opt)
+        return AST.Block(p.instructions_opt, p.lineno)
 
     @_('expression "=" expression')
     def assignment(self, p):
-        return AST.AssignExpr('=', p.expression0, p.expression1)
+        return AST.AssignExpr('=', p.expression0, p.expression1, p.lineno)
 
     @_('expression ADDASSIGN expression')
     def assignment(self, p):
-        return AST.AssignExpr('+=', p.expression0, p.expression1)
+        return AST.AssignExpr('+=', p.expression0, p.expression1, p.lineno)
 
     @_('expression SUBASSIGN expression')
     def assignment(self, p):
-        return AST.AssignExpr('-=', p.expression0, p.expression1)
+        return AST.AssignExpr('-=', p.expression0, p.expression1, p.lineno)
 
     @_('expression MULASSIGN expression')
     def assignment(self, p):
-        return AST.AssignExpr('*=', p.expression0, p.expression1)
+        return AST.AssignExpr('*=', p.expression0, p.expression1, p.lineno)
 
     @_('expression DIVASSIGN expression')
     def assignment(self, p):
-        return AST.AssignExpr('/=', p.expression0, p.expression1)
+        return AST.AssignExpr('/=', p.expression0, p.expression1, p.lineno)
 
     @_('IF "(" expression ")" instruction %prec IFX')
     def if_statement(self, p):
-        return AST.If(p.expression, p.instruction)
+        return AST.If(p.expression, p.instruction, p.lineno)
 
     @_('IF "(" expression ")" instruction ELSE instruction')
     def if_statement(self, p):
-        return AST.If(p.expression, p.instruction0, p.instruction1)
+        return AST.If(p.expression, p.instruction0, p.lineno, p.instruction1)
 
     @_('WHILE "(" expression ")" instruction')
     def while_loop(self, p):
-        return AST.While(p.expression, p.instruction)
+        return AST.While(p.expression, p.instruction, p.lineno)
 
     @_('FOR variable "=" range instruction')
     def for_loop(self, p):
-        return AST.For(p.variable, p.range, p.instruction)
+        return AST.For(p.variable, p.range, p.instruction, p.lineno)
 
     @_('variable')
     def expression(self, p):
@@ -123,11 +123,11 @@ class Mparser(Parser):
 
     @_('ID')
     def variable(self, p):
-        return AST.Variable(p.ID)
+        return AST.Variable(p.ID, p.lineno)
 
     @_('variable "[" expression_list "]"')
     def expression(self, p):
-        return AST.Reference(p.variable, p.expression_list)
+        return AST.Reference(p.variable, p.expression_list, p.lineno)
 
     @_('vector')
     def expression_list(self, p):
@@ -135,7 +135,7 @@ class Mparser(Parser):
 
     @_('expression ":" expression')
     def range(self, p):
-        return AST.Range(p.expression0, p.expression1)
+        return AST.Range(p.expression0, p.expression1, p.lineno)
 
     @_('expression')
     def expression_list(self, p):
@@ -151,75 +151,75 @@ class Mparser(Parser):
 
     @_('expression "=" vector')
     def expression(self, p):
-        return AST.AssignExpr('=', p.expression, p.vector)
+        return AST.AssignExpr('=', p.expression, p.vector, p.lineno)
     
     @_('"[" expression_list "]"')
     def vector(self, p):
-        return AST.Vector(p.expression_list)
+        return AST.Vector(p.expression_list, p.lineno)
 
     @_('expression "+" expression')
     def expression(self, p):
-        return AST.BinExpr('+', p.expression0, p.expression1)
+        return AST.BinExpr('+', p.expression0, p.expression1, p.lineno)
 
     @_('expression "-" expression')
     def expression(self, p):
-        return AST.BinExpr('-', p.expression0, p.expression1)
+        return AST.BinExpr('-', p.expression0, p.expression1, p.lineno)
 
     @_('expression "*" expression')
     def expression(self, p):
-        return AST.BinExpr('*', p.expression0, p.expression1)
+        return AST.BinExpr('*', p.expression0, p.expression1, p.lineno)
 
     @_('expression "/" expression')
     def expression(self, p):
-        return AST.BinExpr('/', p.expression0, p.expression1)
+        return AST.BinExpr('/', p.expression0, p.expression1, p.lineno)
 
     @_('expression MATADD expression')
     def expression(self, p):
-        return AST.BinExpr('.+', p.expression0, p.expression1)
+        return AST.BinExpr('.+', p.expression0, p.expression1, p.lineno)
 
     @_('expression MATSUB expression')
     def expression(self, p):
-        return AST.BinExpr('.-', p.expression0, p.expression1)
+        return AST.BinExpr('.-', p.expression0, p.expression1, p.lineno)
 
     @_('expression MATMUL expression')
     def expression(self, p):
-        return AST.BinExpr('.*', p.expression0, p.expression1)
+        return AST.BinExpr('.*', p.expression0, p.expression1, p.lineno)
 
     @_('expression MATDIV expression')
     def expression(self, p):
-        return AST.BinExpr('./', p.expression0, p.expression1)
+        return AST.BinExpr('./', p.expression0, p.expression1, p.lineno)
 
     @_('expression EQUALS expression')
     def expression(self, p):
-        return AST.RelExpr('==', p.expression0, p.expression1)
+        return AST.RelExpr('==', p.expression0, p.expression1, p.lineno)
 
     @_('expression NOTEQUALS expression')
     def expression(self, p):
-        return AST.RelExpr('!=', p.expression0, p.expression1)
+        return AST.RelExpr('!=', p.expression0, p.expression1, p.lineno)
 
     @_('expression LESSEQUALS expression')
     def expression(self, p):
-        return AST.RelExpr('<=', p.expression0, p.expression1)
+        return AST.RelExpr('<=', p.expression0, p.expression1, p.lineno)
 
     @_('expression GREATEREQUALS expression')
     def expression(self, p):
-        return AST.RelExpr('>=', p.expression0, p.expression1)
+        return AST.RelExpr('>=', p.expression0, p.expression1, p.lineno)
 
     @_('expression "<" expression')
     def expression(self, p):
-        return AST.RelExpr('<', p.expression0, p.expression1)
+        return AST.RelExpr('<', p.expression0, p.expression1, p.lineno)
 
     @_('expression ">" expression')
     def expression(self, p):
-        return AST.RelExpr('>', p.expression0, p.expression1)
+        return AST.RelExpr('>', p.expression0, p.expression1, p.lineno)
 
     @_('"-" expression %prec UMINUS')
     def expression(self, p):
-        return AST.UnaryExpr('-', p.expression)
+        return AST.UnaryExpr('-', p.expression, p.lineno)
 
     @_('expression "\'"')
     def expression(self, p):
-        return AST.Transpose(p.expression)
+        return AST.Transpose(p.expression, p.lineno)
 
     @_('"(" expression ")"')
     def expression(self, p):
@@ -227,27 +227,27 @@ class Mparser(Parser):
 
     @_('INT')
     def expression(self, p):
-        return AST.IntNum(p.INT)
+        return AST.IntNum(p.INT, p.lineno)
 
     @_('FLOAT')
     def expression(self, p):
-        return AST.FloatNum(p.FLOAT)
+        return AST.FloatNum(p.FLOAT, p.lineno)
 
     @_('STRING')
     def expression(self, p):
-        return AST.String(p.STRING)
+        return AST.String(p.STRING, p.lineno)
 
     @_('EYE "(" expression ")"')
     def expression(self, p):
-        return AST.Eye(p.expression)
+        return AST.Eye(p.expression, p.lineno)
 
-    @_('ZEROS "(" expression ")"')
+    @_('ZEROS "(" expression_list ")"')
     def expression(self, p):
-        return AST.Zeros(p.expression)
+        return AST.Zeros(p.expression_list, p.lineno)
 
-    @_('ONES "(" expression ")"')
+    @_('ONES "(" expression_list ")"')
     def expression(self, p):
-        return AST.Ones(p.expression)
+        return AST.Ones(p.expression_list, p.lineno)
 
     def error(self, token):
         if token:
@@ -255,5 +255,5 @@ class Mparser(Parser):
             print(f"Syntax error in line {lineno}: Unexpected token {token.type}")
         else:
             print("Syntax error: Unexpected end of input")
-        return AST.Error()
+        return AST.Error(lineno)
 

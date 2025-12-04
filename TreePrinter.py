@@ -94,13 +94,14 @@ class TreePrinter:
     @addToClass(AST.Print)
     def printTree(self, indent=0):
         print("| " * indent + "PRINT")
-        for val in self.value:
+        for val in self.values:
             val.printTree(indent + 1)
 
     @addToClass(AST.Zeros)
     def printTree(self, indent=0):
         print("| " * indent + "zeros")
-        self.value.printTree(indent + 1)
+        for val in self.values:
+            val.printTree(indent + 1)
 
     @addToClass(AST.Eye)
     def printTree(self, indent=0):
@@ -110,7 +111,8 @@ class TreePrinter:
     @addToClass(AST.Ones)
     def printTree(self, indent=0):
         print("| " * indent + "ones")
-        self.value.printTree(indent + 1)
+        for val in self.values:
+            val.printTree(indent + 1)
 
     @addToClass(AST.Transpose)
     def printTree(self, indent=0):

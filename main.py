@@ -3,6 +3,7 @@ import ply.yacc as yacc
 from scanner import Scanner
 from parser import Mparser
 from TreePrinter import TreePrinter
+from TypeChecker import TypeChecker
 
 
 if __name__ == '__main__':
@@ -17,5 +18,10 @@ if __name__ == '__main__':
     lexer = Scanner()
     parser = Mparser()
     text = file.read()
+    
     ast = parser.parse(lexer.tokenize(text))
     ast.printTree()
+    
+    typeChecker = TypeChecker()   
+    typeChecker.visit(ast)   # or alternatively ast.accept(typeChecker)
+    
