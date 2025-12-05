@@ -12,13 +12,13 @@ class Mparser(Parser):
     precedence = (
         ('right', '=', ADDASSIGN, SUBASSIGN, MULASSIGN, DIVASSIGN),
         ('left', 'EQUALS', 'NOTEQUALS', 'LESSEQUALS', 'GREATEREQUALS', '<', '>'),
+        ('left', ':'),
         ('left', '+', '-', MATADD, MATSUB),
         ('left', '*', '/', MATMUL, MATDIV),
         ('right', 'UMINUS'),
         ('nonassoc', 'IFX'),
         ('nonassoc', 'ELSE'),
         ('left', "'"),
-        ('left', ':'),
     )
 
     @_('instructions_opt')
