@@ -95,7 +95,7 @@ class TreePrinter:
     @addToClass(AST.Print)
     def printTree(self, indent=0):
         print(INDENT_STRING * indent + "PRINT")
-        for val in self.value:
+        for val in self.values:
             val.printTree(indent + 1)
 
     @addToClass(AST.Zeros)
